@@ -8,7 +8,7 @@ url <- paste0(my_url, start)
 boeing <- read_html(url)
 
 #checking content of downloaded HTML
-write_html(boeing, "C:/Users/Krisz/Desktop/ceu/materials/fall_2/web_scraping/course_work/assignment/web_scraping/boeing.html")
+write_html(boeing, "C:/Users/Krisz/Desktop/ceu/materials/fall_2/web_scraping/course_work/assignment/web_scraping/boeing/boeing.html")
 View(boeing)
 
 # selecting a couple of pages to be downloaded
@@ -46,7 +46,7 @@ boeing_final <- rbindlist(lapply(urls, function(url){
 
 View(boeing_final)
 
-saveRDS(boeing_final, file = "C:/Users/Krisz/Desktop/ceu/materials/fall_2/web_scraping/course_work/assignment/web_scraping/boeing_news.rds")
+saveRDS(boeing_final, file = "C:/Users/Krisz/Desktop/ceu/materials/fall_2/web_scraping/course_work/assignment/web_scraping/boeing/boeing_news.rds")
 
 
 
