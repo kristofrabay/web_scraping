@@ -6,6 +6,11 @@
 - Dataframe stored in RDS
 - WordCloud with top words in news headlines
 	
+2: Collect jobs data (compensation) for US market from PayScale
+
+- R code to scrape all job links
+- Dataframe stored in RDS
+
 2: Collect stock price from NASDAQ, store in dfs in different folders, automate date-saving
 - fromJSON in R
 - tbc
