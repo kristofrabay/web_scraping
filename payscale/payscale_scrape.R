@@ -12,26 +12,40 @@ library(pbapply)
 main_url <- "https://www.payscale.com/research/US/Job"
 main_url_html <- read_html(main_url)
 
+# first load all industries
 industries <- main_url_html %>% html_nodes(".related-content-card__title") %>% html_text() #get all industries covered on website
 
+# secondly load every possible scenario: industry - starting letter of job
 urls <- unlist(lapply(seq(1,length(industries)), function (x){
   paste0("https://www.payscale.com/research/US/Job/", industries[x], "/", LETTERS)
 })) # got a list containing all possible links on payscale
 
+# get actual links that point to sites containing information
 create_salary_urls <- function(url) {
 
-tryurl <- read_html(url)
-tryurl_jobs <- tryurl %>% html_nodes(".subcats__links__item") %>% html_attr("href")
-tryurl_jobs <- gsub("/research/","",tryurl_jobs)
-tryurl_url <- paste0("https://www.payscale.com/research/", tryurl_jobs) #browseURL(tryurl_url[6]) links work
-tryurl_url <- tryurl_url %>% .[!grepl("hourly_rate",tolower(.))] #sorting out temporary jobs - jobs that calculate with hourly wage instead of salary
+tryurl <- tryCatch(read_html(url) %>% 
+  html_nodes(".subcats__links__item") %>% 
+  html_attr("href"),
+  error = function(e){NA})
+
+tryurl_jobs <- gsub("/research/","",tryurl)
+
+
+tryurl_url <- tryCatch(
+  paste0("https://www.payscale.com/research/", tryurl_jobs) %>% .[!grepl("hourly_rate",tolower(.))],
+  error = function(e){NA})
 
 return(tryurl_url)
 
 }
 
-all_jobs_urls <- unlist(pblapply(urls[1:10], create_salary_urls))
+# create every possible job link that will be used to extract data from
+all_jobs_urls <- unlist(pblapply(urls[1:20], create_salary_urls))
 
+# get rid of NA links
+all_jobs_urls <- all_jobs_urls[!grepl(paste0("research/NA", collapse = "|"), all_jobs_urls)] 
+
+# function for one job data extraction
 get_one_job <- function(url) {
 
 job <- read_html(url)
@@ -64,8 +78,12 @@ return(job_data)
 
 }
 
+# extract data for all jobs --> done
 get_all_jobs <- rbindlist(pblapply(all_jobs_urls, get_one_job))
 
+# view our dataset
+nrow(get_all_jobs)
 View(get_all_jobs)
 
+# save to RDS
 saveRDS(get_all_jobs, "payscale/jobs.rds")
