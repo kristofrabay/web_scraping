@@ -40,7 +40,7 @@ return(tryurl_url)
 }
 
 # create every possible job link that will be used to extract data from
-all_jobs_urls <- unlist(pblapply(urls[1:20], create_salary_urls))
+all_jobs_urls <- unlist(pblapply(urls, create_salary_urls))
 
 # get rid of NA links
 all_jobs_urls <- all_jobs_urls[!grepl(paste0("research/NA", collapse = "|"), all_jobs_urls)] 
