@@ -9,8 +9,5 @@
 2: Collect jobs data (compensation) for US market from PayScale
 
 - R code to scrape all job links
-- Dataframe stored in RDS
-
-2: Collect stock price from NASDAQ, store in dfs in different folders, automate date-saving
-- fromJSON in R
-- tbc
+- Dataframe stored in RDS and in CSV (jobs.RDS, jobs.csv)
+- Some descriptive stats (job medians, salary distributions)
